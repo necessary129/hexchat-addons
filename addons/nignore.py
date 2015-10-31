@@ -70,8 +70,16 @@ def unset(word, word_eol, userdata):
     saveconf()
     return hexchat.EAT_NONE
 
+def listi(word, word_eol, userdata):
+    global ignores
+    alli = " ,".join(ignores)
+    toprnt = "Ignored hosts are: "+alli if ignores else "No hosts are ignored"
+    hexchat.prnt(toprnt)
+    return hexchat.EAT_NONE
+
 loadconf()
 hexchat.hook_server('NICK',on_nick,priority=hexchat.PRI_HIGHEST)
 hexchat.hook_command('NIGNORE',setignorer,help="/nignore <host>")
 hexchat.hook_command('UNNIGNORE',unset,help="/unnignore <host>")
+hexchat.hook_command('NIGNORE LIST',listi,help='/nignore list')
 print("{0} module version {1} by {2} loaded.".format(__module_name__, __module_version__, __module_author__))
