@@ -33,7 +33,6 @@ def saveconf():
     global ignores
     with open(path,'w') as fd:
         json.dump(ignores,fd,indent=4)
-    loadconf()
 
 def loadconf():
     global ignores
