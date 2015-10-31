@@ -87,5 +87,7 @@ def get_pluginpref(idk):
     pass
 def set_pluginpref(_,__):
     pass
+def hook_unload(_):
+    pass
 
 
