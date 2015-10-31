@@ -83,4 +83,9 @@ def hook_server(raw,func,priority):
 def prnt(stri):
     print(stri)
 
+def get_pluginpref(idk):
+    pass
+def set_pluginpref(_,__):
+    pass
+
 
