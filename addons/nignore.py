@@ -24,13 +24,15 @@ __module_description__ = 'Ignores nick changes.'
 __module_author__ = 'noteness'
 ignores = []
 import json
+
+
 path = os.path.join(os.path.expanduser('~'),'ignores.json')
 if not os.path.exists(path):
     open(path,'w').close()
 def saveconf():
     global ignores
     with open(path,'w') as fd:
-        json.dump(fd,ignores,indent=4)
+        json.dump(ignores,fd,indent=4)
     loadconf()
 
 def loadconf():
