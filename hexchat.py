@@ -26,6 +26,10 @@ PRI_NORM = 1
 PRI_LOW = 1
 PRI_LOWEST = 1
 import re
+import traceback
+import threading
+import socket
+locky = threading.RLock()
 cmd_pattern = re.compile(r'eg: /(.+)', re.MULTILINE)
 if __name__ == "__main__":
     import os
@@ -51,7 +55,9 @@ if __name__ == "__main__":
                     __import__('addons.{0}'.format(x), globals=globals())
                     print("{0} is WORKING.".format(x))
                 except Exception as err:
-                    print("{0} is FAILING. ({1})".format(x, err))
+                    errurl = pastebin(traceback.format_exc())
+                    print("{0} is FAILING. ({1}: {2})".format(x, err, errurl))
+                    
                     broken = 1
         if not val.endswith('.py'):
             continue
@@ -93,6 +99,23 @@ def command(command):
 testword = [':Slavetator!noteness@unaffiliated/nessessary129/bot/slavetator', 'NICK', ':Slavetator___']
 testwordeol = [':Slavetator!noteness@unaffiliated/nessessary129/bot/slavetator NICK :Slavetator___', 'NICK :Slavetator___', ':Slavetator___']
 testdata = None
+def pastebin(tb):
+    with locky:
+        try:
+        
+            sock = socket.socket()
+            sock.connect(("termbin.com", 9999))
+            if sys.version_info [0] == 3:
+                sock.send(tb.encode("utf-8", "replace") + b"\n")
+                url = sock.recv(1024).decode("utf-8")
+            else:
+                sock.send(tb+'\n')
+                url = sock.recv(1024)
+            sock.close()
+        except socket.error:
+            traceback.print_exc()
+        else:
+            return url
 def hook_server(raw,func,priority):
     if raw == 'NICK':
         func(testword,testwordeol,testdata)
