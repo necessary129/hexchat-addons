@@ -67,7 +67,7 @@ def unset(word, word_eol, userdata):
         return hexchat.EAT_NONE
     temp = ignores[num]
     del ignores[num]
-    hexchat.prnt('user {0} successfully removed from ignore list'.format(tempo))
+    hexchat.prnt('user {0} successfully removed from ignore list'.format(temp))
     saveconf()
 
 
