@@ -17,7 +17,7 @@
 import hexchat
 import sys
 import fnmatch
-__module_name__ = 'Nick Ignore'
+__module_name__ = 'NIgnore'
 __module_version__ = '0.2.4'
 __module_description__ = 'Ignores nick changes.'
 __module_author__ = 'noteness'
@@ -26,40 +26,29 @@ hook = None
 
 def saveconf():
     global ignores
-    hexchat.set_pluginpref('nignore_ignores', ",".join(ignores))
+    hexchat.set_pluginpref(__module_name__+'_ignores', ",".join(ignores))
 
 def loadconf():
     global ignores
-    ign = hexchat.get_pluginpref('nignore_ignores')
+    ign = hexchat.get_pluginpref(__module_name__+'_ignores')
     if ign:
         ignores = ign.split(',')
     else:
         ignores = []
 
-
-
 def setignorer(word, word_eol, userdata):
     global ignores
     if len(word) !=  2:
-        hexchat.command('HELP NIGNORE')
+        hexchat.command('HELP '+ word[0])
         return 
     ignores.append(word[1])
     hexchat.prnt('user {0} successfully added to ignore list'.format(word[1]))
     saveconf()
 
-def on_nick(word, word_eol, userdata):
-    global ignores
-    host =word[0]
-    for x in ignores:
-        if fnmatch.fnmatch(host, x):
-            return hexchat.EAT_ALL
-    return hexchat.EAT_NONE
-
-
 def unset(word, word_eol, userdata):
     global ignores
     if len(word)  != 2 :
-        hexchat.command('HELP UNNIGNORE')
+        hexchat.command('HELP '+ word[0])
         return
     num =int(word[1])
     if  not len(ignores) >= num:
@@ -80,6 +69,14 @@ def listi(word, word_eol, userdata):
     alli = ", ".join(allo)
     toprnt = "Ignored users are: "+alli if ignores else "No hosts are ignored"
     hexchat.prnt(toprnt)
+
+def on_nick(word, word_eol, userdata):
+    global ignores
+    host =word[0]
+    for x in ignores:
+        if fnmatch.fnmatch(host, x):
+            return hexchat.EAT_ALL
+    return hexchat.EAT_NONE
 
 help = {
     "nignore": """/NIGNORE <nick>!<ident>@<host> (Wildcards accepted)
