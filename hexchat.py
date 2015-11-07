@@ -106,15 +106,10 @@ if __name__ == "__main__":
         sys.exit(0)
 
 def hook_command(name, function, help):
-    yo = cmd_pattern.search(help).group(1)
-    eol = []
-    tot = 0
-    word = yo.split()
-    for x in word:
-        eol.append(yo.split(" ", tot)[-1])
-        tot += 1
     yo = cmd_pattern.findall(help)
     for each in yo:
+        word, eol = parse(each)
+        function(word, eol, None)
     
 def command(command):
     split = command.replace("\x034", "").split(" ")
@@ -141,8 +136,15 @@ def hook_server(raw,func,priority):
     raw = raw.lower()
     raws = rlines.get(raw, None)
     word, eol = parse(raws)
+    print('*** Server sends --> '+raws)
     data = datas.get(raw, None)
-    func(word, wordeol, data)
+    bb = func(word, eol, data)
+    if bb != EAT_ALL:
+        print('*** Plugins recieves <-- '+raws)
+    elif bb != EAT_HEXCHAT:
+        print('*** We recieves <-- '+raws )
+    elif bb == EAT_PLUGIN:
+        print("*** Current Plugin stops processing")
 def prnt(stri):
     print(stri)
 
