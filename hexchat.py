@@ -30,6 +30,7 @@ import traceback
 import threading
 import socket
 import os
+import os.path
 locky = threading.RLock()
 cmd_pattern = re.compile(r'eg: /(.+)', re.MULTILINE)
 
@@ -83,12 +84,12 @@ if __name__ == "__main__":
                 x = x.replace('.py','')
                 x = "{0}.{1}".format(val, x)
                 print("Testing {0}".format(x))
-                ppath = os.path.join('addons',x.split('.')[0],'__init__.py')
-                open(path, 'w').close()
+                ppath = os.path.join('addons',val,'__init__.py')
+                open(ppath, 'w').close()
                 try:
                     __import__('addons.{0}'.format(x), globals=globals())
                     print("{0} is WORKING.".format(x))
-                    os.remove(path)
+                    os.remove(ppath)
                 except Exception as err:
                     errurl = pastebin(traceback.format_exc())
                     print("{0} is FAILING. ({1}: {2})".format(x, err, errurl))
