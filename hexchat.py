@@ -17,14 +17,14 @@
 #SOFTWARE.
 
 EAT_PLUGIN = 1
-EAT_HEXCHAT = 1
-EAT_ALL = 1
-EAT_NONE = 1
-PRI_HIGHEST = 1
-PRI_HIGH = 1
-PRI_NORM = 1
-PRI_LOW = 1
-PRI_LOWEST = 1
+EAT_HEXCHAT = 2
+EAT_ALL = 3
+EAT_NONE = None
+PRI_HIGHEST = 9
+PRI_HIGH = 8
+PRI_NORM = 7
+PRI_LOW = 6
+PRI_LOWEST = 5
 import re
 import traceback
 import threading
@@ -32,6 +32,17 @@ import socket
 locky = threading.RLock()
 cmd_pattern = re.compile(r'eg: /(.+)', re.MULTILINE)
 
+def parse(yo):
+    eol = []
+    tot = 0
+    word = yo.split()
+    for x in word:
+        eol.append(yo.split(" ", tot)[-1])
+        tot += 1
+    return word, eol
+def prnt(stri):
+    q.put(pprnt(stri))
+    
 def pastebin(tb):
     with locky:
         try:
@@ -102,7 +113,8 @@ def hook_command(name, function, help):
     for x in word:
         eol.append(yo.split(" ", tot)[-1])
         tot += 1
-    function(word, eol, None)
+    yo = cmd_pattern.findall(help)
+    for each in yo:
     
 def command(command):
     split = command.replace("\x034", "").split(" ")
@@ -116,22 +128,19 @@ def command(command):
         print("->{0}<- {1}".format(split[1], command.replace(split[0] + " ", "").replace(split[1] + " ", "")))
 
 
-words ={
-    "nick": [':Slavetator!noteness@unaffiliated/nessessary129/bot/slavetator', 'NICK', ':Slavetator___'],
-    "kick":[':Slavetator!noteness@unaffiliated/nessessary129/bot/slavetator', 'KICK', 'noteness',':You should know better'],
+rlines ={
+    "nick": ':Slavetator!noteness@unaffiliated/nessessary129/bot/slavetator NICK :Slavetator___',
+    "kick":':Slavetator!noteness@unaffiliated/nessessary129/bot/slavetator KICK noteness :You should know better',
 
 }
-wordeols = {
-    "nick": [':Slavetator!noteness@unaffiliated/nessessary129/bot/slavetator NICK :Slavetator___', 'NICK :Slavetator___', ':Slavetator___'],
-    "kick": [':Slavetator!noteness@unaffiliated/nessessary129/bot/slavetator KICK noteness :You should know better','KICK noteness :You should know better','noteness :You should know better',':You should know better']
-}
+
 datas = {
     
 }
 def hook_server(raw,func,priority):
     raw = raw.lower()
-    word = words.get(raw, None)
-    wordeol = wordeols.get(raw ,None)
+    raws = rlines.get(raw, None)
+    word, eol = parse(raws)
     data = datas.get(raw, None)
     func(word, wordeol, data)
 def prnt(stri):
