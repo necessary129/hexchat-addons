@@ -37,7 +37,7 @@ def getlstkeep():
     global lastkeep
     kp = hexchat.get_pluginpref('xkeep__lastkeep')
     if kp:
-        lastkeep = int(kp)
+        lastkeep = float(kp)
 
 def savk():
     global lastkeep
@@ -54,6 +54,7 @@ diff = diff.seconds
 
 def time_cb(_):
     global week
+    global hook
     channel = hexchat.find_context(channel='#xshellz')
     channel.command('say !keep {0}'.format(username))
     update()
