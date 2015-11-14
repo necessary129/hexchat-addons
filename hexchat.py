@@ -134,6 +134,7 @@ def command(command):
 rlines ={
     "nick": ':Slavetator!noteness@unaffiliated/nessessary129/bot/slavetator NICK :Slavetator___',
     "kick":':Slavetator!noteness@unaffiliated/nessessary129/bot/slavetator KICK noteness :You should know better',
+    "priv": ':Slavetator!noteness@unaffiliated/nessessary129/bot/slavetator PRIVMSG #Slavetator-test :Hello'
 
 }
 
@@ -153,6 +154,14 @@ def hook_server(raw,func,priority):
         print('*** We recieves <-- '+raws )
     elif bb == EAT_PLUGIN:
         print("*** Current Plugin stops processing")
+
+
+def hook_print(name, func, priority):
+    raws = rlines['priv']
+    word, eol = parse(raws)
+    func(word, eol, name)
+
+
 def prnt(stri):
     print(stri)
 
