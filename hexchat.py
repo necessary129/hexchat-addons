@@ -161,7 +161,8 @@ def hook_print(name, func, priority):
     word, eol = parse(raws)
     func(word, eol, name)
 
-
+def hook_timer(time, func, userdata=None):
+    func(userdata)
 def prnt(stri):
     print(stri)
 
